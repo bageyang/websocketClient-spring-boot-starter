@@ -1,6 +1,6 @@
-package com.websocket.client.websocket;
+package xyz.icanfly.websocket.websocket.handshake;
 
-import com.websocket.client.websocket.util.WebSocketUtil;
+import xyz.icanfly.websocket.websocket.util.WebSocketUtil;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.websocketx.WebSocket13FrameEncoder;

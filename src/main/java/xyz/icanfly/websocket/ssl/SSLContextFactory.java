@@ -1,4 +1,4 @@
-package com.websocket.client.ssl;
+package xyz.icanfly.websocket.ssl;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;

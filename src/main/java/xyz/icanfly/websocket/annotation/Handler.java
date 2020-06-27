@@ -1,4 +1,4 @@
-package com.websocket.client.annotation;
+package xyz.icanfly.websocket.annotation;
 
 import org.springframework.stereotype.Component;
 
@@ -8,10 +8,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * to market the implement of SimpleChannelInboundHandler
  * @author yang
  */
 @Component
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface HandlerMap {
+public @interface Handler {
 }

@@ -1,4 +1,4 @@
-package com.websocket.client.websocket.status;
+package xyz.icanfly.websocket.websocket.status;
 
 /**
  * @author yang

@@ -1,10 +1,10 @@
-package com.websocket.client.config;
+package xyz.icanfly.websocket.config;
 
-import com.websocket.client.annotation.Handler;
-import com.websocket.client.annotation.HandlerMap;
-import com.websocket.client.websocket.DefaultWebSocketChannelMap;
-import com.websocket.client.websocket.NettyWebSocketClient;
-import com.websocket.client.websocket.WebSocketUriMap;
+import xyz.icanfly.websocket.annotation.Handler;
+import xyz.icanfly.websocket.annotation.HandlerMap;
+import xyz.icanfly.websocket.websocket.handshake.DefaultWebSocketChannelMap;
+import xyz.icanfly.websocket.websocket.NettyWebSocketClient;
+import xyz.icanfly.websocket.websocket.handshake.WebSocketUriMap;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.SmartInitializingSingleton;

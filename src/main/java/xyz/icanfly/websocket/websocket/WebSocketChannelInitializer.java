@@ -1,6 +1,6 @@
-package com.websocket.client.websocket;
+package xyz.icanfly.websocket.websocket;
 
-import com.websocket.client.ssl.SSLContextFactory;
+import xyz.icanfly.websocket.ssl.SSLContextFactory;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -8,6 +8,8 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.HttpClientCodec;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.ssl.SslHandler;
+import xyz.icanfly.websocket.websocket.handshake.WebSocketClientHelper;
+import xyz.icanfly.websocket.websocket.handshake.WebSocketUriMap;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;

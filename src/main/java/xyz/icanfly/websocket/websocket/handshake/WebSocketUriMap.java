@@ -1,4 +1,4 @@
-package com.websocket.client.websocket;
+package xyz.icanfly.websocket.websocket.handshake;
 
 import io.netty.channel.Channel;
 

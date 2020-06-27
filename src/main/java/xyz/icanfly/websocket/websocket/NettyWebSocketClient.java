@@ -1,4 +1,4 @@
-package com.websocket.client.websocket;
+package xyz.icanfly.websocket.websocket;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -7,6 +7,7 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import xyz.icanfly.websocket.websocket.handshake.WebSocketUriMap;
 
 import java.net.URI;
 import java.util.List;

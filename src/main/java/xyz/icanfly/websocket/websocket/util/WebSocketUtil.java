@@ -1,6 +1,6 @@
-package com.websocket.client.websocket.util;
+package xyz.icanfly.websocket.websocket.util;
 
-import com.websocket.client.websocket.WebSocketFullHttpRequest;
+import xyz.icanfly.websocket.websocket.handshake.WebSocketFullHttpRequest;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.websocketx.WebSocket13FrameDecoder;

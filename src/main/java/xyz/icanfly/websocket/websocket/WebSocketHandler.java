@@ -1,4 +1,4 @@
-package com.websocket.client.websocket;
+package xyz.icanfly.websocket.websocket;
 
 import io.netty.channel.ChannelHandlerContext;
 

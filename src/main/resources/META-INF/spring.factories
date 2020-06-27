@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.websocket.client.config.ClientAutoConfig
+xyz.icanfly.websocket.config.ClientAutoConfig

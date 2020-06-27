@@ -1,6 +1,6 @@
-package com.websocket.client.websocket;
+package xyz.icanfly.websocket.websocket.handshake;
 
-import com.websocket.client.websocket.status.HandshakeStateEvent;
+import xyz.icanfly.websocket.websocket.status.HandshakeStateEvent;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.websocketx.WebSocketHandshakeException;

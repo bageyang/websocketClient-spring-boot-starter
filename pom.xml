@@ -10,7 +10,7 @@
         <version>2.1.4.RELEASE</version>
     </parent>
 
-    <groupId>com.hubei.yang</groupId>
+    <groupId>xyz.icanfly.websocket</groupId>
     <artifactId>websocketClient-spring-boot-starter</artifactId>
     <version>1.0</version>
 

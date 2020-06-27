@@ -1,6 +1,7 @@
-package com.websocket.client.websocket;
+package xyz.icanfly.websocket.websocket.handshake;
 
 import io.netty.channel.Channel;
+import xyz.icanfly.websocket.websocket.handshake.WebSocketUriMap;
 
 import java.net.URI;
 import java.util.concurrent.ConcurrentHashMap;

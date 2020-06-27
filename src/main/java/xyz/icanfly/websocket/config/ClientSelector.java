@@ -1,4 +1,4 @@
-package com.websocket.client.config;
+package xyz.icanfly.websocket.config;
 
 import org.springframework.context.annotation.ImportSelector;
 import org.springframework.core.Ordered;
