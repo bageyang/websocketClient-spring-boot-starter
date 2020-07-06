@@ -6,10 +6,14 @@ import java.util.HashSet;
 import java.util.StringJoiner;
 
 /**
+ * the config of websocket clients
  * @author yang
  */
 @ConfigurationProperties(prefix = "websocket.client")
 public class ClientProperties {
+    /**
+     * the urls of clients
+     */
     private HashSet<String> url;
     private Integer clientNumbers;
     private Long keepTimes;

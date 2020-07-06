@@ -9,6 +9,8 @@ import java.lang.annotation.Target;
 
 /**
  * to market the implement of SimpleChannelInboundHandler
+ * you can define a class which implement SimpleChannelInboundHandler interface
+ * and market of this annotation
  * @author yang
  */
 @Component
