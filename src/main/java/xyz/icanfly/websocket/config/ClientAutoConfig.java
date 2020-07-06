@@ -1,10 +1,7 @@
 package xyz.icanfly.websocket.config;
 
 import xyz.icanfly.websocket.annotation.Handler;
-import xyz.icanfly.websocket.annotation.HandlerMap;
-import xyz.icanfly.websocket.websocket.handshake.DefaultWebSocketChannelMap;
 import xyz.icanfly.websocket.websocket.NettyWebSocketClient;
-import xyz.icanfly.websocket.websocket.handshake.WebSocketUriMap;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.SmartInitializingSingleton;
@@ -33,23 +30,14 @@ public class ClientAutoConfig extends ApplicationObjectSupport implements SmartI
         logger.info("select the client properties: \n"+properties.toString());
         HashSet<String> url = properties.getUrl();
         SimpleChannelInboundHandler handler = getHandler(context);
-        WebSocketUriMap map = getHandlerMap(context);
         List<URI> uri = of(url);
-        new NettyWebSocketClient().urls(uri).handler(handler).map(map).run();
+        new NettyWebSocketClient().urls(uri).handler(handler).run();
     }
 
     private SimpleChannelInboundHandler getHandler(ApplicationContext context) {
         return Optional.ofNullable(getBeanWithAnnotationOnBean(context, Handler.class,
                 SimpleChannelInboundHandler.class))
                 .orElseThrow(() -> new BeanInitializationException("can not find bean of type SimpleChannelInboundHandler"));
-    }
-
-    private WebSocketUriMap getHandlerMap(ApplicationContext context) {
-        WebSocketUriMap annotationOnBean = getBeanWithAnnotationOnBean(context, HandlerMap.class, WebSocketUriMap.class);
-        if(Objects.isNull(annotationOnBean)){
-            annotationOnBean = new DefaultWebSocketChannelMap();
-        }
-        return annotationOnBean;
     }
 
     @SuppressWarnings("unchecked")

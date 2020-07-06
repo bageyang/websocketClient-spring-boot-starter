@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author yang
  */
+@Deprecated
 public class DefaultWebSocketChannelMap implements WebSocketUriMap {
     private static ConcurrentHashMap<String, URI> uriMap = new ConcurrentHashMap<>();
 

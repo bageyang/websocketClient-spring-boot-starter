@@ -8,6 +8,7 @@ import java.net.URI;
  * create a mapping with uri and channel
  * @author yang
  */
+@Deprecated
 public interface WebSocketUriMap {
     /**
      * Provides the uri of channel connected

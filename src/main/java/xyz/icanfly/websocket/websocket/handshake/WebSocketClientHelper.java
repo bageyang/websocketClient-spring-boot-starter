@@ -1,5 +1,6 @@
 package xyz.icanfly.websocket.websocket.handshake;
 
+import xyz.icanfly.websocket.websocket.attribute.Attribute;
 import xyz.icanfly.websocket.websocket.status.HandshakeStateEvent;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.FullHttpResponse;
@@ -18,15 +19,13 @@ import java.util.concurrent.TimeUnit;
 public class WebSocketClientHelper extends ChannelInboundHandlerAdapter {
     private final WebsocketHandlerShaker handshaker;
     private ChannelPromise promise;
-    private WebSocketUriMap uriHelper;
 
-    public WebSocketClientHelper(WebsocketHandlerShaker handshaker, WebSocketUriMap helper) {
+    public WebSocketClientHelper(WebsocketHandlerShaker handshaker) {
         this.handshaker = handshaker;
-        this.uriHelper=helper;
     }
 
-    public WebSocketClientHelper(WebSocketUriMap helper) {
-        this(new WebsocketHandlerShaker(),helper);
+    public WebSocketClientHelper() {
+        this(new WebsocketHandlerShaker());
     }
 
     @Override
@@ -38,7 +37,7 @@ public class WebSocketClientHelper extends ChannelInboundHandlerAdapter {
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
         Channel channel = ctx.channel();
-        URI uri = uriHelper.getChannelClientUri(channel);
+        URI uri = channel.attr(Attribute.WEBSOCKET_URI).get();
         handshaker.handShake(channel, promise,uri).addListener(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture future) throws Exception {

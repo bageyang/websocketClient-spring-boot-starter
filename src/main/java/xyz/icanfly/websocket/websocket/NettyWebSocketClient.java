@@ -36,13 +36,8 @@ public class NettyWebSocketClient {
                     .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
                     .handler(channelInitializer);
             for (URI uri : uris) {
-                /**
-                 * TODO webSocketUriMap 实现方式太蠢
-                 * 可以用 channel.attr(AttributeKey.newInstance("name")).set("godme");
-                 */
                 ChannelFuture channelFuture = bootstrap.connect(uri.getHost(), 443).sync();
                 channelFuture.channel().attr(Attribute.WEBSOCKET_URI).set(uri);
-                webSocketUriMap.save(channelFuture.channel(),uri);
                 channelFuture.channel().closeFuture().sync();
             }
             return bootstrap;
@@ -67,6 +62,7 @@ public class NettyWebSocketClient {
         return self();
     }
 
+    @Deprecated
     public NettyWebSocketClient map(WebSocketUriMap map){
         this.webSocketUriMap=map;
         return self();
@@ -75,7 +71,5 @@ public class NettyWebSocketClient {
     private NettyWebSocketClient self() {
         return this;
     }
-
-
 
 }
