@@ -12,8 +12,8 @@ import java.net.URI;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author yang
  * help netty to connection a remoteAddress by websocket
+ * @author yang
  */
 public class WebSocketClientHelper extends ChannelInboundHandlerAdapter {
     private final WebsocketHandlerShaker handshaker;

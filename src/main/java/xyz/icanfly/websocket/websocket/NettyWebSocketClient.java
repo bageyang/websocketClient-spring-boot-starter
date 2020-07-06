@@ -7,6 +7,8 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.util.AttributeKey;
+import xyz.icanfly.websocket.websocket.attribute.Attribute;
 import xyz.icanfly.websocket.websocket.handshake.WebSocketUriMap;
 
 import java.net.URI;
@@ -34,7 +36,12 @@ public class NettyWebSocketClient {
                     .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
                     .handler(channelInitializer);
             for (URI uri : uris) {
+                /**
+                 * TODO webSocketUriMap 实现方式太蠢
+                 * 可以用 channel.attr(AttributeKey.newInstance("name")).set("godme");
+                 */
                 ChannelFuture channelFuture = bootstrap.connect(uri.getHost(), 443).sync();
+                channelFuture.channel().attr(Attribute.WEBSOCKET_URI).set(uri);
                 webSocketUriMap.save(channelFuture.channel(),uri);
                 channelFuture.channel().closeFuture().sync();
             }
