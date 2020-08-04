@@ -19,7 +19,6 @@ import java.util.List;
  */
 public class NettyWebSocketClient {
     private List<URI> uris;
-    private WebSocketUriMap webSocketUriMap;
     private SimpleChannelInboundHandler messageHandler;
 
     public NettyWebSocketClient(){}
@@ -29,7 +28,6 @@ public class NettyWebSocketClient {
         try {
            WebSocketChannelInitializer channelInitializer = new WebSocketChannelInitializer();
            channelInitializer.handler(messageHandler);
-           channelInitializer.map(webSocketUriMap);
             Bootstrap bootstrap = new Bootstrap()
                     .group(workGroup)
                     .channel(NioSocketChannel.class)
@@ -59,12 +57,6 @@ public class NettyWebSocketClient {
 
     public NettyWebSocketClient handler(SimpleChannelInboundHandler handler){
         this.messageHandler=handler;
-        return self();
-    }
-
-    @Deprecated
-    public NettyWebSocketClient map(WebSocketUriMap map){
-        this.webSocketUriMap=map;
         return self();
     }
 
