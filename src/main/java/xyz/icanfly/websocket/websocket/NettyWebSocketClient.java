@@ -2,14 +2,16 @@ package xyz.icanfly.websocket.websocket;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.util.AttributeKey;
+import io.netty.util.internal.logging.InternalLogger;
+import io.netty.util.internal.logging.InternalLoggerFactory;
 import xyz.icanfly.websocket.websocket.attribute.Attribute;
-import xyz.icanfly.websocket.websocket.handshake.WebSocketUriMap;
+import xyz.icanfly.websocket.websocket.status.ObjectHolder;
 
 import java.net.URI;
 import java.util.List;
@@ -18,45 +20,53 @@ import java.util.List;
  * @author yang
  */
 public class NettyWebSocketClient {
+    private static final InternalLogger logger = InternalLoggerFactory.getInstance(NettyWebSocketClient.class);
     private List<URI> uris;
     private SimpleChannelInboundHandler messageHandler;
+    private static Bootstrap holderStrap;
 
-    public NettyWebSocketClient(){}
+    public NettyWebSocketClient() {}
 
-    public Bootstrap run(){
+    public void run() {
         NioEventLoopGroup workGroup = new NioEventLoopGroup(8);
         try {
-           WebSocketChannelInitializer channelInitializer = new WebSocketChannelInitializer();
-           channelInitializer.handler(messageHandler);
-            Bootstrap bootstrap = new Bootstrap()
+            WebSocketChannelInitializer channelInitializer = new WebSocketChannelInitializer();
+            channelInitializer.handler(messageHandler);
+            holderStrap = new Bootstrap()
                     .group(workGroup)
                     .channel(NioSocketChannel.class)
                     .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
                     .handler(channelInitializer);
-            for (URI uri : uris) {
-                ChannelFuture channelFuture = bootstrap.connect(uri.getHost(), 443).sync();
-                channelFuture.channel().attr(Attribute.WEBSOCKET_URI).set(uri);
-                channelFuture.channel().closeFuture().sync();
-            }
-            return bootstrap;
+            connection();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("error with start websocket client :", e);
         } finally {
-            workGroup.shutdownGracefully();
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                workGroup.shutdownGracefully().syncUninterruptibly();
+            }));
         }
-        return null;
     }
 
-    public NettyWebSocketClient urls(List<URI> urls)  {
-        if (urls==null||urls.isEmpty()) {
-            throw new IllegalArgumentException ("Invalid empty List");
+    public void connection() {
+        for (URI uri : uris) {
+            ChannelFuture channelFuture = holderStrap.connect(uri.getHost(), 443);
+            Channel channel = channelFuture.channel();
+            channel.attr(Attribute.WEBSOCKET_URI).set(uri);
+            ObjectHolder.add(channel);
         }
-        this.uris=urls;
+    }
+
+
+    public NettyWebSocketClient urls(List<URI> urls) {
+        if (urls == null || urls.isEmpty()) {
+            throw new IllegalArgumentException("Invalid empty List");
+        }
+        this.uris = urls;
         return self();
     }
 
-    public NettyWebSocketClient handler(SimpleChannelInboundHandler handler){
-        this.messageHandler=handler;
+    public NettyWebSocketClient handler(SimpleChannelInboundHandler handler) {
+        this.messageHandler = handler;
         return self();
     }
 

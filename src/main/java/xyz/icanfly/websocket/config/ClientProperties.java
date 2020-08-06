@@ -3,6 +3,7 @@ package xyz.icanfly.websocket.config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.StringJoiner;
 
 /**
@@ -14,41 +15,25 @@ public class ClientProperties {
     /**
      * the urls of clients
      */
-    private HashSet<String> url;
-    private Integer clientNumbers;
-    private Long keepTimes;
+    private List<String> url;
 
-    public HashSet<String> getUrl() {
+    public List<String> getUrl() {
         return url;
     }
 
-    public void setUrl(HashSet<String> url) {
+    public void setUrl(List<String> url) {
         this.url = url;
     }
 
-    public Integer getClientNumbers() {
-        return clientNumbers;
-    }
-
-    public void setClientNumbers(Integer clientNumbers) {
-        this.clientNumbers = clientNumbers;
-    }
-
-    public Long getKeepTimes() {
-        return keepTimes;
-    }
-
-    public void setKeepTimes(Long keepTimes) {
-        this.keepTimes = keepTimes;
-    }
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", ClientProperties.class.getSimpleName() + "[", "]")
-                .add("url=" + url)
-                .add("clientNumbers=" + clientNumbers)
-                .add("keepTimes=" + keepTimes)
-                .toString();
+        StringJoiner joiner = new StringJoiner("\n\t");
+        joiner.add("urls:");
+        for (String s : url) {
+            joiner.add(s);
+        }
+        return joiner.toString();
     }
 
 }

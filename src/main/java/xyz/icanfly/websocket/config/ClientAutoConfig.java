@@ -10,6 +10,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ApplicationObjectSupport;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
+import xyz.icanfly.websocket.websocket.status.ObjectHolder;
 
 import java.lang.annotation.Annotation;
 import java.net.URI;
@@ -28,10 +29,12 @@ public class ClientAutoConfig extends ApplicationObjectSupport implements SmartI
         ApplicationContext context = getApplicationContext();
         ClientProperties properties = Optional.of(context.getBean(ClientProperties.class)).get();
         logger.info("select the client properties: \n"+properties.toString());
-        HashSet<String> url = properties.getUrl();
+        List<String> url = properties.getUrl();
         SimpleChannelInboundHandler handler = getHandler(context);
         List<URI> uri = of(url);
-        new NettyWebSocketClient().urls(uri).handler(handler).run();
+        NettyWebSocketClient client = new NettyWebSocketClient().urls(uri).handler(handler);
+        ObjectHolder.setWebsocketClient(client);
+        client.run();
     }
 
     private SimpleChannelInboundHandler getHandler(ApplicationContext context) {
@@ -55,7 +58,7 @@ public class ClientAutoConfig extends ApplicationObjectSupport implements SmartI
                 );
     }
 
-    private List<URI> of(HashSet<String> url) {
+    private List<URI> of(List<String> url) {
         return url.stream().map(this::ofString).collect(Collectors.toList());
     }
 
