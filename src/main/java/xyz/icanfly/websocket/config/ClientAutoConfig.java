@@ -1,7 +1,6 @@
 package xyz.icanfly.websocket.config;
 
 import xyz.icanfly.websocket.annotation.Handler;
-import xyz.icanfly.websocket.websocket.NettyWebSocketClient;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.SmartInitializingSingleton;
@@ -10,7 +9,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ApplicationObjectSupport;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
-import xyz.icanfly.websocket.websocket.status.ObjectHolder;
+import xyz.icanfly.websocket.websocket.WebSocketConnector;
+import xyz.icanfly.websocket.websocket.status.ObjectManager;
 
 import java.lang.annotation.Annotation;
 import java.net.URI;
@@ -32,8 +32,8 @@ public class ClientAutoConfig extends ApplicationObjectSupport implements SmartI
         List<String> url = properties.getUrl();
         SimpleChannelInboundHandler handler = getHandler(context);
         List<URI> uri = of(url);
-        NettyWebSocketClient client = new NettyWebSocketClient().urls(uri).handler(handler);
-        ObjectHolder.setWebsocketClient(client);
+        WebSocketConnector client = new WebSocketConnector().urls(uri).handler(handler);
+        ObjectManager.setWebSocketConnector(client);
         client.run();
     }
 

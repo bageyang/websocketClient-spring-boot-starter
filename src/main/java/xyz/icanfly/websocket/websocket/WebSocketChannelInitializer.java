@@ -9,7 +9,6 @@ import io.netty.handler.codec.http.HttpClientCodec;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.ssl.SslHandler;
 import xyz.icanfly.websocket.websocket.handshake.WebSocketClientHelper;
-import xyz.icanfly.websocket.websocket.handshake.WebSocketUriMap;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;

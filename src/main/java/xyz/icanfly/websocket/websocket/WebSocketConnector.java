@@ -11,7 +11,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.internal.logging.InternalLogger;
 import io.netty.util.internal.logging.InternalLoggerFactory;
 import xyz.icanfly.websocket.websocket.attribute.Attribute;
-import xyz.icanfly.websocket.websocket.status.ObjectHolder;
+import xyz.icanfly.websocket.websocket.status.ObjectManager;
 
 import java.net.URI;
 import java.util.List;
@@ -19,13 +19,13 @@ import java.util.List;
 /**
  * @author yang
  */
-public class NettyWebSocketClient {
-    private static final InternalLogger logger = InternalLoggerFactory.getInstance(NettyWebSocketClient.class);
+public class WebSocketConnector {
+    private static final InternalLogger logger = InternalLoggerFactory.getInstance(WebSocketConnector.class);
     private List<URI> uris;
     private SimpleChannelInboundHandler messageHandler;
     private static Bootstrap holderStrap;
 
-    public NettyWebSocketClient() {}
+    public WebSocketConnector() {}
 
     public void run() {
         NioEventLoopGroup workGroup = new NioEventLoopGroup(8);
@@ -52,12 +52,12 @@ public class NettyWebSocketClient {
             ChannelFuture channelFuture = holderStrap.connect(uri.getHost(), 443);
             Channel channel = channelFuture.channel();
             channel.attr(Attribute.WEBSOCKET_URI).set(uri);
-            ObjectHolder.add(channel);
+            ObjectManager.add(channel);
         }
     }
 
 
-    public NettyWebSocketClient urls(List<URI> urls) {
+    public WebSocketConnector urls(List<URI> urls) {
         if (urls == null || urls.isEmpty()) {
             throw new IllegalArgumentException("Invalid empty List");
         }
@@ -65,12 +65,12 @@ public class NettyWebSocketClient {
         return self();
     }
 
-    public NettyWebSocketClient handler(SimpleChannelInboundHandler handler) {
+    public WebSocketConnector handler(SimpleChannelInboundHandler handler) {
         this.messageHandler = handler;
         return self();
     }
 
-    private NettyWebSocketClient self() {
+    private WebSocketConnector self() {
         return this;
     }
 
