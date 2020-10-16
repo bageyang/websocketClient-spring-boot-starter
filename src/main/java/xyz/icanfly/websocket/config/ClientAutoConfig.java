@@ -38,6 +38,7 @@ public class ClientAutoConfig extends ApplicationObjectSupport implements SmartI
         ClientHolder.setWebsocketClient(client);
         client.run();
     }
+
     private SimpleChannelInboundHandler getHandler(ApplicationContext context) {
         return Optional.ofNullable(getBeanWithAnnotationOnBean(context, Handler.class,
                 SimpleChannelInboundHandler.class))
@@ -52,7 +53,8 @@ public class ClientAutoConfig extends ApplicationObjectSupport implements SmartI
                 .filter(e -> type.isAssignableFrom(e.getClass()))
                 .map((e -> (T) e))
                 .findFirst()
-                .orElse(implementBean.values()
+                .orElse(
+                        implementBean.values()
                         .stream()
                         .findAny()
                         .orElse(null)

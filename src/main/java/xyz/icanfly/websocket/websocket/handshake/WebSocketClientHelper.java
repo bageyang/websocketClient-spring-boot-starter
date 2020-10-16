@@ -1,5 +1,6 @@
 package xyz.icanfly.websocket.websocket.handshake;
 
+import xyz.icanfly.websocket.config.UrlMark;
 import xyz.icanfly.websocket.websocket.attribute.Attribute;
 import xyz.icanfly.websocket.websocket.status.HandshakeStateEvent;
 import io.netty.channel.*;
@@ -37,7 +38,7 @@ public class WebSocketClientHelper extends ChannelInboundHandlerAdapter {
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
         Channel channel = ctx.channel();
-        URI uri = channel.attr(Attribute.WEBSOCKET_URI).get();
+        URI uri = channel.attr(Attribute.WEBSOCKET_URI).get().getUri();
         handshaker.handShake(channel, promise,uri).addListener(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture future) throws Exception {
