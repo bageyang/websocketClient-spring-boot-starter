@@ -2,8 +2,7 @@ package xyz.icanfly.websocket.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 import java.util.StringJoiner;
 
 /**
@@ -13,16 +12,16 @@ import java.util.StringJoiner;
 @ConfigurationProperties(prefix = "websocket.client")
 public class ClientProperties {
     /**
-     * the urls of clients
+     * urls of type mapping UrlMark
      */
-    private List<String> url;
+    private Map<String, String> marks;
 
-    public List<String> getUrl() {
-        return url;
+    public Map<String, String> getMarks() {
+        return marks;
     }
 
-    public void setUrl(List<String> url) {
-        this.url = url;
+    public void setMarks(Map<String, String> url) {
+        this.marks = url;
     }
 
 
@@ -30,10 +29,7 @@ public class ClientProperties {
     public String toString() {
         StringJoiner joiner = new StringJoiner("\n\t");
         joiner.add("urls:");
-        for (String s : url) {
-            joiner.add(s);
-        }
+        marks.forEach((k, v) -> joiner.add("mark: " + k + ",url: " + v));
         return joiner.toString();
     }
-
 }

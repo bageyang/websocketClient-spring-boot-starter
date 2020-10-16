@@ -1,6 +1,8 @@
 package xyz.icanfly.websocket.websocket.attribute;
 
 import io.netty.util.AttributeKey;
+import jdk.internal.loader.FileURLMapper;
+import xyz.icanfly.websocket.config.UrlMark;
 
 import java.net.URI;
 
@@ -9,5 +11,6 @@ import java.net.URI;
  * @author yang
  */
 public class Attribute {
-    public static final AttributeKey<URI> WEBSOCKET_URI=AttributeKey.valueOf("WEBSOCKET_URI");
+    public static final AttributeKey<UrlMark> WEBSOCKET_URI=AttributeKey.valueOf("WEBSOCKET_URI");
+
 }

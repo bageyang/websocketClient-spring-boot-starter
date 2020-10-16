@@ -6,17 +6,17 @@ package xyz.icanfly.websocket.websocket.status;
 
 public enum HandshakeStateEvent {
     /**
-     * The Handshake was timed out
+     * The handshake was timed out
      */
     TIMEOUT,
 
     /**
-     * The Handshake was started
+     * The handshake was started
      */
     ISSUED,
 
     /**
-     * The Handshake was complete successful and so the channel was upgraded to websocket
+     * The handshake was complete successful and so the channel was upgraded to websocket
      */
     SUCCESS,
 

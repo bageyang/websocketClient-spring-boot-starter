@@ -9,13 +9,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ApplicationObjectSupport;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
-import xyz.icanfly.websocket.websocket.WebSocketConnector;
-import xyz.icanfly.websocket.websocket.status.ObjectManager;
+import xyz.icanfly.websocket.websocket.NettyWebSocketClient;
+import xyz.icanfly.websocket.websocket.status.ClientHolder;
 
 import java.lang.annotation.Annotation;
 import java.net.URI;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author yang
@@ -27,16 +26,18 @@ public class ClientAutoConfig extends ApplicationObjectSupport implements SmartI
     @Override
     public void afterSingletonsInstantiated() {
         ApplicationContext context = getApplicationContext();
+        if(context == null){
+            System.exit(1);
+        }
         ClientProperties properties = Optional.of(context.getBean(ClientProperties.class)).get();
         logger.info("select the client properties: \n"+properties.toString());
-        List<String> url = properties.getUrl();
+        Map<String,String> url = properties.getMarks();
         SimpleChannelInboundHandler handler = getHandler(context);
-        List<URI> uri = of(url);
-        WebSocketConnector client = new WebSocketConnector().urls(uri).handler(handler);
-        ObjectManager.setWebSocketConnector(client);
+        List<UrlMark> marks = of(url);
+        NettyWebSocketClient client = new NettyWebSocketClient().marks(marks).handler(handler);
+        ClientHolder.setWebsocketClient(client);
         client.run();
     }
-
     private SimpleChannelInboundHandler getHandler(ApplicationContext context) {
         return Optional.ofNullable(getBeanWithAnnotationOnBean(context, Handler.class,
                 SimpleChannelInboundHandler.class))
@@ -58,8 +59,12 @@ public class ClientAutoConfig extends ApplicationObjectSupport implements SmartI
                 );
     }
 
-    private List<URI> of(List<String> url) {
-        return url.stream().map(this::ofString).collect(Collectors.toList());
+    private List<UrlMark> of(Map<String,String> url) {
+        List<UrlMark> marks = new ArrayList<UrlMark>(8);
+        url.forEach((k,v)->{
+            marks.add(new UrlMark(k,ofString(v)));
+        });
+        return marks;
     }
 
     private URI ofString(String s) {
