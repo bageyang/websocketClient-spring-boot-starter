@@ -53,7 +53,7 @@ public abstract class BaseWebSocketHandler<T> extends SimpleChannelInboundHandle
      */
     void onClose(ChannelHandlerContext ctx) {}
 
-    protected static WebSocketResource getChannelMark(Channel channel) {
+    protected static WebSocketResource getChannelResource(Channel channel) {
         return channel.attr(Attribute.WEBSOCKET_URI).get();
     }
 
@@ -62,14 +62,14 @@ public abstract class BaseWebSocketHandler<T> extends SimpleChannelInboundHandle
         try {
             onMessage(ctx, msg);
         } catch (Exception e) {
-            LOGGER.error("the channel:{} happen while handle message", getChannelMark(ctx.channel()), e);
+            LOGGER.error("the channel:{} happen while handle message", getChannelResource(ctx.channel()), e);
         }
     }
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) {
         if (isHandShakerComplete(evt)) {
-            LOGGER.info("the connection of {} has already connected !", getChannelMark(ctx.channel()).getUri());
+            LOGGER.info("the connection of {} has already connected !", getChannelResource(ctx.channel()).getUri());
             success(ctx.channel());
             onOpen(ctx);
         }
@@ -79,31 +79,31 @@ public abstract class BaseWebSocketHandler<T> extends SimpleChannelInboundHandle
     public void channelInactive(ChannelHandlerContext ctx) {
         onClose(ctx);
         closeStatus(ctx);
-        LOGGER.error("websocket closed, channelType:{}", getChannelMark(ctx.channel()));
+        LOGGER.error("websocket closed, channelType:{}", getChannelResource(ctx.channel()));
         switchOrRetry(ctx);
     }
 
     private void closeStatus(ChannelHandlerContext ctx){
-        WebSocketResource channelMark = getChannelMark(ctx.channel());
-        channelMark.setStatus(ChannelState.INVALID);
+        WebSocketResource webSocketResource = getChannelResource(ctx.channel());
+        webSocketResource.setStatus(ChannelState.INVALID);
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        LOGGER.error("channel:{} happened an error", getChannelMark(ctx.channel()), cause);
+        LOGGER.error("channel:{} happened an error", getChannelResource(ctx.channel()), cause);
         onError(ctx, cause);
     }
 
     private void success(Channel channel) {
-        WebSocketResource channelMark = getChannelMark(channel);
+        WebSocketResource channelMark = getChannelResource(channel);
         channelMark.setStatus(ChannelState.ALIVE);
     }
 
     private synchronized void switchOrRetry(ChannelHandlerContext ctx) {
-        WebSocketResource channelMark = getChannelMark(ctx.channel());
-        if (channelMark.getStatus() == ChannelState.INVALID) {
-            LOGGER.error("try to reconnect,channelType:{},channel address:{}", channelMark.getType(), channelMark.getUri());
-            NettyWebSocketConnector.connection(channelMark);
+        WebSocketResource webSocketResource = getChannelResource(ctx.channel());
+        if (webSocketResource.getStatus() == ChannelState.INVALID) {
+            LOGGER.error("try to reconnect,channelType:{},channel address:{}", webSocketResource.getType(), webSocketResource.getUri());
+            NettyWebSocketConnector.connection(webSocketResource);
         }
     }
 
