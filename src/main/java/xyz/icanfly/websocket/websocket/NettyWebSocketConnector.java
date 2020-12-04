@@ -11,8 +11,9 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.websocketx.WebSocketScheme;
 import io.netty.util.internal.logging.InternalLogger;
 import io.netty.util.internal.logging.InternalLoggerFactory;
-import xyz.icanfly.websocket.config.UrlMark;
+import xyz.icanfly.websocket.config.WebSocketResource;
 import xyz.icanfly.websocket.websocket.attribute.Attribute;
+import xyz.icanfly.websocket.websocket.handler.RetryHandler;
 import xyz.icanfly.websocket.websocket.status.ChannelState;
 
 import java.net.URI;
@@ -21,17 +22,17 @@ import java.util.List;
 /**
  * @author yang
  */
-public class NettyWebSocketClient {
-    private static final InternalLogger logger = InternalLoggerFactory.getInstance(NettyWebSocketClient.class);
-    private List<UrlMark> marks;
+public class NettyWebSocketConnector {
+    private static final InternalLogger logger = InternalLoggerFactory.getInstance(NettyWebSocketConnector.class);
+    private List<WebSocketResource> marks;
     private SimpleChannelInboundHandler messageHandler;
     private static Bootstrap holderStrap;
 
-    public NettyWebSocketClient() {
+    public NettyWebSocketConnector() {
     }
 
     public void run() {
-        NioEventLoopGroup workGroup = new NioEventLoopGroup(4);
+        NioEventLoopGroup  workGroup = new NioEventLoopGroup(4);
         try {
             WebSocketChannelInitializer channelInitializer = new WebSocketChannelInitializer();
             channelInitializer.handler(messageHandler);
@@ -40,9 +41,10 @@ public class NettyWebSocketClient {
                     .channel(NioSocketChannel.class)
                     .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
                     .handler(channelInitializer);
+            holderStrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000);
             connection();
         } catch (Exception e) {
-            logger.error("error with start websocket client :", e);
+            logger.error("error with start websocket client:\n", e);
         } finally {
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 workGroup.shutdownGracefully().syncUninterruptibly();
@@ -51,15 +53,24 @@ public class NettyWebSocketClient {
     }
 
     public void connection() {
-        for (UrlMark mark : marks) {
+        for (WebSocketResource mark : marks) {
             connection(mark);
         }
     }
 
-    public void connection(UrlMark urlMark) {
-        urlMark.setStatus(ChannelState.COMPLETING);
-        URI uri = urlMark.getUri();
-        holderStrap.connect(getHost(uri), getPort(uri));
+    public static void connection(WebSocketResource webSocketResource) {
+        webSocketResource.setStatus(ChannelState.COMPLETING);
+        URI uri = webSocketResource.getUri();
+        ChannelFuture channelFuture = holderStrap.connect(getHost(uri), getPort(uri)).addListener(future -> {
+            if (!future.isSuccess()) {
+                logger.error("address :{} connected error,case\n", webSocketResource.getUri(), future.cause());
+                RetryHandler.add(webSocketResource);
+            } else {
+                RetryHandler.remove(webSocketResource);
+            }
+        });
+        Channel channel = channelFuture.channel();
+        channel.attr(Attribute.WEBSOCKET_URI).set(webSocketResource);
     }
 
 
@@ -81,7 +92,7 @@ public class NettyWebSocketClient {
     }
 
 
-    public NettyWebSocketClient marks(List<UrlMark> urls) {
+    public NettyWebSocketConnector resources(List<WebSocketResource> urls) {
         if (urls == null || urls.isEmpty()) {
             throw new IllegalArgumentException("Invalid empty List");
         }
@@ -89,12 +100,12 @@ public class NettyWebSocketClient {
         return self();
     }
 
-    public NettyWebSocketClient handler(SimpleChannelInboundHandler handler) {
+    public NettyWebSocketConnector handler(SimpleChannelInboundHandler handler) {
         this.messageHandler = handler;
         return self();
     }
 
-    private NettyWebSocketClient self() {
+    private NettyWebSocketConnector self() {
         return this;
     }
 

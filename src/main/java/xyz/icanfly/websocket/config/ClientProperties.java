@@ -14,22 +14,31 @@ public class ClientProperties {
     /**
      * urls of type mapping UrlMark
      */
-    private Map<String, String> marks;
+    private Map<String, String> resources;
 
-    public Map<String, String> getMarks() {
-        return marks;
+    private RetryProperties retry;
+
+    public Map<String, String> getResources() {
+        return resources;
     }
 
-    public void setMarks(Map<String, String> url) {
-        this.marks = url;
+    public void setResources(Map<String, String> url) {
+        this.resources = url;
     }
 
+    public RetryProperties getRetry() {
+        return retry;
+    }
+
+    public void setRetry(RetryProperties retry) {
+        this.retry = retry;
+    }
 
     @Override
     public String toString() {
         StringJoiner joiner = new StringJoiner("\n\t");
         joiner.add("urls:");
-        marks.forEach((k, v) -> joiner.add("mark: " + k + ",url: " + v));
+        resources.forEach((k, v) -> joiner.add("mark: " + k + ",url: " + v));
         return joiner.toString();
     }
 }

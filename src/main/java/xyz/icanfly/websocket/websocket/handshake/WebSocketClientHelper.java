@@ -1,6 +1,5 @@
 package xyz.icanfly.websocket.websocket.handshake;
 
-import xyz.icanfly.websocket.config.UrlMark;
 import xyz.icanfly.websocket.websocket.attribute.Attribute;
 import xyz.icanfly.websocket.websocket.status.HandshakeStateEvent;
 import io.netty.channel.*;
@@ -67,7 +66,6 @@ public class WebSocketClientHelper extends ChannelInboundHandlerAdapter {
                 promise.trySuccess();
                 ctx.fireUserEventTriggered(HandshakeStateEvent.SUCCESS);
                 ctx.pipeline().remove(this);
-                return;
             }
         } finally {
             response.release();

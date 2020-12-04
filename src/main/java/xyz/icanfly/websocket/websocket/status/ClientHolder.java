@@ -1,18 +1,18 @@
 package xyz.icanfly.websocket.websocket.status;
 
-import xyz.icanfly.websocket.websocket.NettyWebSocketClient;
+import xyz.icanfly.websocket.websocket.NettyWebSocketConnector;
 
 /**
  * @author yang
  */
 public class ClientHolder {
-    private static NettyWebSocketClient WEBSOCKET_CLIENT = null;
+    private static NettyWebSocketConnector WEBSOCKET_CLIENT = null;
 
-    public static void setWebsocketClient(NettyWebSocketClient client) {
+    public static void setWebsocketClient(NettyWebSocketConnector client) {
         WEBSOCKET_CLIENT = client;
     }
 
-    public static NettyWebSocketClient getWebsocketClient() {
+    public static NettyWebSocketConnector getWebsocketClient() {
         return WEBSOCKET_CLIENT;
     }
 }
